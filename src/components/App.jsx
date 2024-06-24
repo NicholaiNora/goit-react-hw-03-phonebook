@@ -11,9 +11,30 @@ export class App extends Component {
       { id: 'id-3', name: 'Im Nayeon', number: '645-17-79' },
       { id: 'id-4', name: `Mary Kris Malenab`, number: '227-91-26' },
     ],
-    filter: ''
+    filter: '',
   };
 
+  componentDidUpdate(_prevProps, prevState) {
+    const { contacts } = this.state;
+    if (contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(contacts));
+    }
+  }
+
+  componentDidMount() {
+    if (localStorage.getItem('contacts') !== null) {
+      this.setState({ contacts: JSON.parse(localStorage.getItem('contacts')) });
+    } else {
+      this.setState({
+        contacts: [
+          { id: 'id-1', name: 'Jennie Kim', number: '459-12-56' },
+          { id: 'id-2', name: 'Kim Jisoo', number: '443-89-12' },
+          { id: 'id-3', name: 'Im Nayeon', number: '645-17-79' },
+          { id: 'id-4', name: `Mary Kris Malenab`, number: '227-91-26' },
+        ],
+      });
+    }
+  }
 
   toCapitalize = phrase => {
     return phrase
@@ -23,11 +44,11 @@ export class App extends Component {
       .join(' ');
   };
 
-  toFilter = (phrase) => {
+  toFilter = phrase => {
     this.setState({
-      filter: phrase
-    })
-  }
+      filter: phrase,
+    });
+  };
   filterContacts = () => {
     const { contacts, filter } = this.state;
     return contacts.filter(
